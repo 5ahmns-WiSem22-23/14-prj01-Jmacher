@@ -8,9 +8,7 @@ public class Pickup : MonoBehaviour
 
     void Update()
     {
-        if (carrying) return;
-
-        transform.Rotate(0, 0, speed * Time.deltaTime);
+        if (!carrying) transform.Rotate(0, 0, speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
