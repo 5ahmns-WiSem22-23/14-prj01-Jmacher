@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 10;
+    public float speed = 1000, smooth = .1f;
     public Rigidbody2D rb;
+    private Vector2 move, vel;
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Vector3 move = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        rb.AddForce(speed * Time.deltaTime * move.normalized);
+        move = Vector2.SmoothDamp(move, speed * Vector3.Normalize(new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"))), ref vel, smooth);
+        rb.velocity = move;
     }
-
-    //Fix stupid shit
 }
