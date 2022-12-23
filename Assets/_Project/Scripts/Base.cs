@@ -1,6 +1,4 @@
-using UnityEngine;
-
 public class Base : MonoBehaviour
 {
-
+    Update() => print("test");
 }
