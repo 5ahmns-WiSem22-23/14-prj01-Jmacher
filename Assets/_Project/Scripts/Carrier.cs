@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Carrier : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private PickupManager manager;
-    [SerializeField] private Transform dropoff;
+    [SerializeField] private Score score;
+
     private Pickup pickup;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -29,10 +31,20 @@ public class Carrier : MonoBehaviour
     private void Update()
     {
         //If the player is the dropoff zone and the carrier is not empty
-        if (dropoff.GetComponent<BoxCollider2D>().bounds.Contains(transform.position) && pickup != null)
+        if (score.GetComponent<BoxCollider2D>().bounds.Contains(transform.position) && pickup != null)
         {
             //Set pickup parent to carrier
-            pickup.transform.SetParent(dropoff);
+            pickup.transform.SetParent(score.transform);
+
+            //Check win condition
+            if (score.Check())
+            {
+                //Disable player
+                Destroy(GetComponent<Player>());
+                Destroy(GetComponent<Rigidbody2D>());
+                Destroy(this);
+                return;
+            }
 
             //Set pickup status to collected
             pickup.collected = true;

@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Pointer : MonoBehaviour
 {
-    public int distance = 5;
-    public PickupManager manager;
+    [SerializeField] private int distance = 5;
+    [Header("References")]
+    [SerializeField] private PickupManager manager;
 
     private void Update()
     {

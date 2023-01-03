@@ -2,24 +2,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float
-        movementSpeed = 800,
-        rotationSpeed = 400;
-
+    public int speed = 10;
+    [Header("References")]
     [SerializeField] private Rigidbody2D rigidBody;
     [SerializeField] private Transform playerCamera;
 
-    private void Update()
+    private void FixedUpdate()
     {
         //Get the input for player movement and rotation
-        float rot = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime;
-        float mov = Input.GetAxis("Vertical") * movementSpeed * Time.deltaTime;
+        float mov = Input.GetAxis("Vertical") * speed;
+        float rot = Input.GetAxis("Horizontal") * speed * .6f;
 
         //Apply the movement and rotation to the player
         rigidBody.velocity = transform.up * mov;
         rigidBody.SetRotation(rigidBody.rotation - rot);
 
-        //Assign the position of the camera to the position of the player
+        //Assign the position of the player to the position of the camera
         playerCamera.position = new(transform.position.x, transform.position.y, playerCamera.position.z);
     }
 }
