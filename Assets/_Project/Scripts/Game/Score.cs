@@ -34,7 +34,7 @@ public class Score : MonoBehaviour
     private void Update()
     {
         //Reset Scene if backspace is pressed
-        if (Input.GetKeyDown(KeyCode.Backspace)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (Input.GetKeyDown(KeyCode.Backspace)) Reload();
 
         //Count time
         time += Time.deltaTime;
@@ -63,4 +63,6 @@ public class Score : MonoBehaviour
 
         return true;
     }
+
+    public void Reload() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 }
