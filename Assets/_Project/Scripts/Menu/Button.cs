@@ -11,12 +11,17 @@ public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     public ButtonSetting setting;
     public UnityEvent onClick;
     public State stateSelected;
+
     private IEnumerator transition;
+    public bool trsEnabled = true, txtEnabled = true, imgEnabled = true, isClicking;
 
     //References
     public RectTransform[] trs;
     public TextMeshProUGUI[] txt;
     public Image[] img;
+
+    //Inspector values
+    public bool stateGroup, animationGroup;
 
     private void Awake() => SetState(setting.standart);
 
@@ -26,10 +31,17 @@ public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
 
     private void Switch(StateData target)
     {
+        if (isClicking) return;
+
         if (transition != null) StopCoroutine(transition);
 
-        //If target state is pressed state transition should mirror
-        transition = target == setting.pressed ? Transition(target, setting.duration / 2, true) : Transition(target, setting.duration, false);
+        //Handle special Click event
+        if (target == setting.pressed)
+        {
+            isClicking = true;
+            transition = Transition(target, /*setting.duration / 2*/ .05f, true);
+        }
+        else transition = Transition(target, /*setting.duration*/ .1f, false);
 
         StartCoroutine(transition);
     }
@@ -43,9 +55,9 @@ public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         //Create empty transition state
         StateData current = new()
         {
-            trs = new RectTransformSetting[start.trs.Length],
-            txt = new TextSetting[start.txt.Length],
-            img = new Color[start.img.Length]
+            trs = trsEnabled ? new RectTransformSetting[setting.transformCount] : null,
+            txt = txtEnabled ? new TextSetting[setting.textCount] : null,
+            img = imgEnabled ? new ImageSetting[setting.imageCount] : null
         };
 
         while (time < duration)
@@ -54,9 +66,9 @@ public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
             float fac = Mathf.InverseLerp(0, duration, time);
 
             //Populate current values
-            for (int i = 0; i < trs.Length; i++) current.trs[i] = RectTransformSetting.Lerp(start.trs[i], target.trs[i], fac);
-            for (int i = 0; i < txt.Length; i++) current.txt[i] = TextSetting.Lerp(start.txt[i], target.txt[i], fac);
-            for (int i = 0; i < img.Length; i++) current.img[i] = Color.Lerp(start.img[i], target.img[i], fac);
+            if (trsEnabled) for (int i = 0; i < setting.transformCount; i++) current.trs[i] = RectTransformSetting.Lerp(start.trs[i], target.trs[i], fac);
+            if (txtEnabled) for (int i = 0; i < setting.textCount; i++) current.txt[i] = TextSetting.Lerp(start.txt[i], target.txt[i], fac);
+            if (imgEnabled) for (int i = 0; i < setting.imageCount; i++) current.img[i] = ImageSetting.Lerp(start.img[i], target.img[i], fac);
 
             //Set current state
             SetState(current);
@@ -67,39 +79,61 @@ public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
             yield return null;
         }
 
-        //Recursion if needed
+        //Mirror if needed
         if (mirror)
         {
             onClick.Invoke();
-            transition = Transition(start, duration, false);
+
+            //Set transition target depening on if the cursor is within rect
+            transition = gameObject.GetComponent<RectTransform>().rect.Contains(Input.mousePosition)
+                ? Transition(setting.hover, duration, false)
+                : Transition(setting.standart, duration, false);
+
+            //Stop ignoring mouse events
+            isClicking = false;
+
             StartCoroutine(transition);
         }
     }
     public StateData GetState()
     {
         //Create settings
-        RectTransformSetting[] trsState = new RectTransformSetting[trs.Length];
-        TextSetting[] txtState = new TextSetting[txt.Length];
-        Color[] imgState = new Color[img.Length];
+        RectTransformSetting[] trsState = trsEnabled ? new RectTransformSetting[setting.transformCount] : null;
+        TextSetting[] txtState = txtEnabled ? new TextSetting[setting.textCount] : null;
+        ImageSetting[] imgState = imgEnabled ? new ImageSetting[setting.imageCount] : null;
 
-        //Assign settings
-        for (int i = 0; i < trs.Length; i++)
+        //Assign settings if enabled
+        if (trsEnabled)
         {
-            trsState[i].anchoredPosition = trs[i].anchoredPosition;
-            trsState[i].anchoredPosition3D = trs[i].anchoredPosition3D;
-            trsState[i].anchorMax = trs[i].anchorMax;
-            trsState[i].anchorMin = trs[i].anchorMin;
-            trsState[i].offsetMax = trs[i].offsetMax;
-            trsState[i].offsetMin = trs[i].offsetMin;
-            trsState[i].pivot = trs[i].pivot;
-            trsState[i].sizeDelta = trs[i].sizeDelta;
+            for (int i = 0; i < setting.transformCount; i++)
+            {
+                trsState[i].anchoredPosition = trs[i].anchoredPosition;
+                trsState[i].anchoredPosition3D = trs[i].anchoredPosition3D;
+                trsState[i].anchorMax = trs[i].anchorMax;
+                trsState[i].anchorMin = trs[i].anchorMin;
+                trsState[i].offsetMax = trs[i].offsetMax;
+                trsState[i].offsetMin = trs[i].offsetMin;
+                trsState[i].pivot = trs[i].pivot;
+                trsState[i].sizeDelta = trs[i].sizeDelta;
+            }
         }
-        for (int i = 0; i < txt.Length; i++)
+        if (txtEnabled)
         {
-            txtState[i].fontSize = txt[i].fontSize;
-            txtState[i].color = txt[i].color;
+            for (int i = 0; i < setting.textCount; i++)
+            {
+                txtState[i].font = txt[i].font;
+                txtState[i].fontSize = txt[i].fontSize;
+                txtState[i].color = txt[i].color;
+            }
         }
-        for (int i = 0; i < img.Length; i++) imgState[i] = img[i].color;
+        if (imgEnabled)
+        {
+            for (int i = 0; i < setting.imageCount; i++)
+            {
+                imgState[i].sprite = img[i].sprite;
+                imgState[i].color = img[i].color;
+            }
+        }
 
         //Return finished state
         return new StateData()
@@ -111,23 +145,37 @@ public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     }
     public void SetState(StateData state)
     {
-        for (int i = 0; i < trs.Length; i++)
+        if (trsEnabled)
         {
-            trs[i].anchoredPosition = state.trs[i].anchoredPosition;
-            trs[i].anchoredPosition3D = state.trs[i].anchoredPosition3D;
-            trs[i].anchorMax = state.trs[i].anchorMax;
-            trs[i].anchorMin = state.trs[i].anchorMin;
-            trs[i].offsetMax = state.trs[i].offsetMax;
-            trs[i].offsetMin = state.trs[i].offsetMin;
-            trs[i].pivot = state.trs[i].pivot;
-            trs[i].sizeDelta = state.trs[i].sizeDelta;
+            for (int i = 0; i < setting.transformCount; i++)
+            {
+                trs[i].anchoredPosition = state.trs[i].anchoredPosition;
+                trs[i].anchoredPosition3D = state.trs[i].anchoredPosition3D;
+                trs[i].anchorMax = state.trs[i].anchorMax;
+                trs[i].anchorMin = state.trs[i].anchorMin;
+                trs[i].offsetMax = state.trs[i].offsetMax;
+                trs[i].offsetMin = state.trs[i].offsetMin;
+                trs[i].pivot = state.trs[i].pivot;
+                trs[i].sizeDelta = state.trs[i].sizeDelta;
+            }
         }
-        for (int i = 0; i < txt.Length; i++)
+        if (txtEnabled)
         {
-            txt[i].fontSize = state.txt[i].fontSize;
-            txt[i].color = state.txt[i].color;
+            for (int i = 0; i < setting.textCount; i++)
+            {
+                txt[i].font = state.txt[i].font;
+                txt[i].fontSize = state.txt[i].fontSize;
+                txt[i].color = state.txt[i].color;
+            }
         }
-        for (int i = 0; i < img.Length; i++) img[i].color = state.img[i];
+        if (imgEnabled)
+        {
+            for (int i = 0; i < setting.imageCount; i++)
+            {
+                img[i].sprite = state.img[i].sprite;
+                img[i].color = state.img[i].color;
+            }
+        }
     }
 }
 
