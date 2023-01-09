@@ -1,19 +1,15 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Score : MonoBehaviour
 {
     [SerializeField] private int winCount;
+
     [Header("References")]
     [SerializeField] private GameObject gameInterface;
-    [SerializeField]
-    private GameObject endNormalInterface,
-        endScoreInterface;
-    [SerializeField]
-    private TextMeshProUGUI countText,
-        timeText,
-        scoreText;
+    [SerializeField] private GameObject endNormalInterface, endScoreInterface;
+    [SerializeField] private TextMeshProUGUI countText, timeText, scoreText;
+    [SerializeField] private EndScreen test;
 
     private float time;
 
@@ -34,7 +30,7 @@ public class Score : MonoBehaviour
     private void Update()
     {
         //Reset Scene if backspace is pressed
-        if (Input.GetKeyDown(KeyCode.Backspace)) Reload();
+        if (Input.GetKeyDown(KeyCode.Backspace)) ;
 
         //Count time
         time += Time.deltaTime;
@@ -63,6 +59,4 @@ public class Score : MonoBehaviour
 
         return true;
     }
-
-    public void Reload() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 }
