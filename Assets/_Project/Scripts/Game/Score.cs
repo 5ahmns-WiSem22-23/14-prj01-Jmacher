@@ -6,16 +6,15 @@ public class Score : MonoBehaviour
     [SerializeField] private int winCount;
 
     [Header("References")]
-    [SerializeField] private GameObject gameInterface;
-    [SerializeField] private GameObject endNormalInterface, endScoreInterface;
-    [SerializeField] private TextMeshProUGUI countText, timeText, scoreText;
-    [SerializeField] private EndScreen test;
+    [SerializeField] private GameObject gameInterface, endInterface;
+    [SerializeField] private TextMeshProUGUI countText, timeText;
+    [SerializeField] private EndScreen screen;
 
-    private float time;
+    [HideInInspector] public float time;
 
     private void Awake()
     {
-        //Get initial win count
+        //Set initial win count
         Check();
 
         //Disable cursor
@@ -23,14 +22,13 @@ public class Score : MonoBehaviour
 
         //Handle user interfaces
         gameInterface.SetActive(true);
-        endNormalInterface.SetActive(false);
-        endScoreInterface.SetActive(false);
+        endInterface.SetActive(false);
     }
 
     private void Update()
     {
         //Reset Scene if backspace is pressed
-        if (Input.GetKeyDown(KeyCode.Backspace)) ;
+        if (Input.GetKeyDown(KeyCode.Backspace)) { /*Reset here*/ }
 
         //Count time
         time += Time.deltaTime;
@@ -42,17 +40,15 @@ public class Score : MonoBehaviour
     public bool Check()
     {
         //Set count text
-        countText.text = transform.childCount + " / " + winCount;
+        countText.text = (transform.childCount - 1).ToString() + " / " + winCount;
 
         //Return if win count is not reached
-        if (transform.childCount < winCount) return false;
-
-        //Save time
-        scoreText.text = time.ToString("0.0");
+        if (transform.childCount - 1 < winCount) return false;
 
         //Show Endscreen
         gameInterface.SetActive(false);
-        endNormalInterface.SetActive(true);
+        endInterface.SetActive(true);
+        screen.CreateScreen(time);
 
         //Enable cursor
         Cursor.lockState = CursorLockMode.None;

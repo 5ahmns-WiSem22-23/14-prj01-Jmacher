@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public int speed = 10;
+    public float speed = 10, boost = 5;
     [Header("References")]
     [SerializeField] private Rigidbody2D rigidBody;
     [SerializeField] private Transform playerCamera;
@@ -20,4 +20,6 @@ public class Player : MonoBehaviour
         //Assign the position of the player to the position of the camera
         playerCamera.position = new(transform.position.x, transform.position.y, playerCamera.position.z);
     }
+
+    public void Boost() => speed += boost;
 }

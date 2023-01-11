@@ -104,10 +104,13 @@ namespace Interface
             //Mirror if needed
             if (target == ButtonState.Pressed)
             {
+                buttonState = ButtonState.Default;
                 onClick.Invoke();
 
-                transition = Transition(ButtonState.Hover);
+                //Check if gameobject was disabled meanwhile
+                if (!gameObject.activeInHierarchy) yield break;
 
+                transition = Transition(ButtonState.Hover);
                 StartCoroutine(transition);
             }
         }

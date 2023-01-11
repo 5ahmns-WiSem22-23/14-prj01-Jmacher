@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickupManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject pickupPrefab;
+    [SerializeField] private GameObject[] pickupPrefabs = new GameObject[3];
     [SerializeField] private bool debugPoints;
     private List<Transform> spawnPoints = new();
 
@@ -23,7 +23,10 @@ public class PickupManager : MonoBehaviour
         if (spawnPoints.Count < 1) return;
 
         //Spawn pickup at one of the spawnpoints
-        Pickup = Instantiate(pickupPrefab, spawnPoints[Random.Range(0, spawnPoints.Count - 1)].position, Quaternion.identity).transform;
+        Pickup = Instantiate(pickupPrefabs[Random.Range(0, 3)], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity).transform;
+
+        //Rotate pickup randomly
+        Pickup.Rotate(0, 0, Random.Range(0, 360));
     }
 
     public void GetPoints()

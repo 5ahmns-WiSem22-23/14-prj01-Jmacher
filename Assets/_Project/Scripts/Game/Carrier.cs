@@ -53,7 +53,7 @@ public class Carrier : MonoBehaviour
             Destroy(pickup.GetComponent<Collider2D>());
 
             //Set the pickup image sorting layer to the background
-            pickup.GetComponent<SpriteRenderer>().sortingLayerName = "Background";
+            pickup.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";
 
             //Set pickup variable to null
             pickup = null;
