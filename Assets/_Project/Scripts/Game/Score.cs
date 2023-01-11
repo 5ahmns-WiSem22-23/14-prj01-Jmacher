@@ -9,6 +9,7 @@ public class Score : MonoBehaviour
     [SerializeField] private GameObject gameInterface, endInterface;
     [SerializeField] private TextMeshProUGUI countText, timeText;
     [SerializeField] private EndScreen screen;
+    [SerializeField] private Player player;
 
     [HideInInspector] public float time;
 
@@ -28,10 +29,12 @@ public class Score : MonoBehaviour
     private void Update()
     {
         //Reset Scene if backspace is pressed
-        if (Input.GetKeyDown(KeyCode.Backspace)) { /*Reset here*/ }
+        if (Input.GetKeyDown(KeyCode.Backspace)) screen.Reload();
 
         //Count time
         time += Time.deltaTime;
+
+        if (!player.started) time = 0;
 
         //Set time text
         timeText.text = time.ToString("0.0");

@@ -2117,6 +2117,7 @@ MonoBehaviour:
   boost: 2
   rigidBody: {fileID: 620952158}
   playerCamera: {fileID: 519420032}
+  started: 0
 --- !u!50 &620952158
 Rigidbody2D:
   serializedVersion: 4
@@ -2603,12 +2604,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8de96490019a0834ea67012becd8bcdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winCount: 6
+  winCount: 5
   gameInterface: {fileID: 2079827515}
   endInterface: {fileID: 1331373758}
   countText: {fileID: 631763361}
   timeText: {fileID: 282131571}
   screen: {fileID: 1331373760}
+  player: {fileID: 620952157}
   time: 0
 --- !u!1001 &757990814
 PrefabInstance:

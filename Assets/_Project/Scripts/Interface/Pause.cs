@@ -10,6 +10,8 @@ public class Pause : MonoBehaviour
 
     private void Update()
     {
+        //Todo: fix esc key in pause
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (paused) Exit();
@@ -38,5 +40,7 @@ public class Pause : MonoBehaviour
         pauseInterface.SetActive(true);
         gameInterface.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
+
+        //Todo: disable spawners
     }
 }
