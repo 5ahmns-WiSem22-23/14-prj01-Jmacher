@@ -8,6 +8,7 @@ public class EndScreen : MonoBehaviour
     [SerializeField] private TMP_InputField input;
     [SerializeField] private GameObject regularInterface, highscoreInterface, effectPrefab, player;
     [SerializeField] private Pause pause;
+    [SerializeField] private BoosterManager bm;
 
     private float scoreTime;
     private string[] endMessages = new string[]
@@ -16,6 +17,7 @@ public class EndScreen : MonoBehaviour
     public void CreateScreen(float time)
     {
         pause.enabled = false;
+        bm.StopAllCoroutines();
 
         scoreTime = time;
         float best = PlayerPrefs.GetFloat("scoreTime");

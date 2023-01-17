@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -18,17 +19,28 @@ public class Player : MonoBehaviour
         float rot = Input.GetAxis("Horizontal") * speed * .6f;
 
         if (!started)
-        {
             if (mov != 0 || rot != 0) started = true;
-        }
 
         rigidBody.velocity = transform.up * mov;
         rigidBody.SetRotation(rigidBody.rotation - rot);
 
         playerCamera.position = new(transform.position.x, transform.position.y, playerCamera.position.z);
     }
+    public IEnumerator Boost()
+    {
+        WaitForEndOfFrame wait = new();
+        float time = duration;
 
-    public void Boost() => speed += boost;
+        speed += boost;
 
-    //Todo: fix boost duration
+        while (time > 0)
+        {
+            print(time);
+            if (!pause.paused) time -= Time.deltaTime;
+            yield return wait;
+        }
+
+        speed -= boost;
+        yield break;
+    }
 }
