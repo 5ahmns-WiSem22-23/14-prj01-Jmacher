@@ -4576,6 +4576,7 @@ MonoBehaviour:
   effectPrefab: {fileID: 7659145009332700688, guid: 614a3bcd7cb932640a80a156f86d6706, type: 3}
   player: {fileID: 620952153}
   pause: {fileID: 870159055}
+  bm: {fileID: 1128044636}
 --- !u!1 &1346932651
 GameObject:
   m_ObjectHideFlags: 0

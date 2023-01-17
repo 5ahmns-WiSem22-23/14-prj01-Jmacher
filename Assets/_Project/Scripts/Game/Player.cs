@@ -35,7 +35,6 @@ public class Player : MonoBehaviour
 
         while (time > 0)
         {
-            print(time);
             if (!pause.paused) time -= Time.deltaTime;
             yield return wait;
         }
