@@ -26,6 +26,6 @@ public class Pause : MonoBehaviour
         gameInterface.SetActive(!state);
         Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
         if (state) bm.StopAllCoroutines();
-        else bm.Awake();
+        else bm.StartCoroutine(bm.SpawnBooster());
     }
 }

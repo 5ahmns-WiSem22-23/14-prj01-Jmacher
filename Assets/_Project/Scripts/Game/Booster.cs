@@ -14,9 +14,8 @@ public class Booster : MonoBehaviour
         {
             collision.GetComponent<Player>().Boost();
             bm.boosters.Remove(gameObject);
+            bm.StartCoroutine(bm.SpawnBooster());
             Destroy(gameObject);
-
-            //Todo: start new coroutine here
         }
     }
 }

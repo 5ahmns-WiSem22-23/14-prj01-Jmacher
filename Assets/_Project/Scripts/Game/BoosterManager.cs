@@ -11,15 +11,10 @@ public class BoosterManager : MonoBehaviour
 
     [HideInInspector] public List<GameObject> boosters = new();
     private List<Transform> spawnPoints = new();
-    [HideInInspector] public IEnumerator coroutine;
 
-    public void Awake()
-    {
-        coroutine = SpawnBooster();
-        StartCoroutine(coroutine);
-    }
+    public void Awake() => StartCoroutine(SpawnBooster());
 
-    private IEnumerator SpawnBooster()
+    public IEnumerator SpawnBooster()
     {
         spawnPoints = GetComponentsInChildren<Transform>().ToList();
         spawnPoints.Remove(transform);
