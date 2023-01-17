@@ -5,42 +5,27 @@ public class Pause : MonoBehaviour
     [SerializeField] private Score score;
     [SerializeField] private GameObject pauseInterface, gameInterface;
     [SerializeField] private Rigidbody2D player;
-    private bool paused;
+    [SerializeField] private BoosterManager bm;
+    [HideInInspector] public bool paused = false;
     private float time;
 
     private void Update()
     {
-        //Todo: fix esc key in pause
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (paused) Exit();
-            if (!paused) Enter();
-        }
+        if (Input.GetKeyDown(KeyCode.Escape)) Toggle(!paused);
     }
 
-    public void Exit()
+    public void Toggle(bool state)
     {
-        paused = false;
-        player.bodyType = RigidbodyType2D.Dynamic;
-        pauseInterface.SetActive(false);
-        gameInterface.SetActive(true);
-        Cursor.lockState = CursorLockMode.Locked;
+        paused = state;
 
-        //Set time back to saved time
-        score.time = time;
-    }
-    private void Enter()
-    {
-        //Collect time
-        time = score.time;
+        if (state) time = score.time;
+        else score.time = time;
 
-        paused = true;
-        player.bodyType = RigidbodyType2D.Static;
-        pauseInterface.SetActive(true);
-        gameInterface.SetActive(false);
-        Cursor.lockState = CursorLockMode.None;
-
-        //Todo: disable spawners
+        player.bodyType = state ? RigidbodyType2D.Static : RigidbodyType2D.Dynamic;
+        pauseInterface.SetActive(state);
+        gameInterface.SetActive(!state);
+        Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        if (state) bm.StopAllCoroutines();
+        else bm.Awake();
     }
 }

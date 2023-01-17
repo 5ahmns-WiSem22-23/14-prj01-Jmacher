@@ -17,7 +17,6 @@ namespace Interface
 
     public class Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
-        //Inspector
         [SerializeField] private UnityEvent onClick;
 
         [Header("Settings")]
@@ -33,7 +32,6 @@ namespace Interface
         [SerializeField] private TextMeshProUGUI textComponent;
         [SerializeField] private Image imageComponent;
 
-        //Properties
         public bool Active
         {
             get => buttonState == ButtonState.Disabled;
@@ -44,7 +42,6 @@ namespace Interface
             }
         }
 
-        //Storage
         private ButtonState buttonState;
         private IEnumerator transition;
 
@@ -67,7 +64,6 @@ namespace Interface
         {
             ButtonState start = buttonState;
 
-            //Get start values
             Vector2 startButtonSize = transformComponent.sizeDelta;
             float startFontSize = textComponent.fontSize;
             Color startFontColor = textComponent.color;
@@ -82,32 +78,26 @@ namespace Interface
 
             while (time < limit)
             {
-                //Calculate lerp factor
                 float fac = Mathf.InverseLerp(0, duration, time);
                 float smooth = curve.Evaluate(fac);
 
-                //Apply values
                 transformComponent.sizeDelta = Vector2.Lerp(startButtonSize, buttonSize[(int)target], smooth);
                 textComponent.fontSize = Mathf.Lerp(startFontSize, fontSize[(int)target], smooth);
                 textComponent.color = Color.Lerp(startFontColor, fontColor[(int)target], smooth);
                 imageComponent.color = Color.Lerp(startImageColor, imageColor[(int)target], smooth);
 
-                //Update time as last step
                 time += Time.deltaTime;
 
                 yield return null;
             }
 
-            //Ensure final values are reached
             SetState(target);
 
-            //Mirror if needed
             if (target == ButtonState.Pressed)
             {
                 buttonState = ButtonState.Default;
                 onClick.Invoke();
 
-                //Check if gameobject was disabled meanwhile
                 if (!gameObject.activeInHierarchy) yield break;
 
                 transition = Transition(ButtonState.Hover);

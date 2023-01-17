@@ -18,7 +18,8 @@ public class EndScreen : MonoBehaviour
         pause.enabled = false;
 
         scoreTime = time;
-        bool highscore = time < PlayerPrefs.GetFloat("score");
+        float best = PlayerPrefs.GetFloat("scoreTime");
+        bool highscore = time < best || best == 0;
 
         title.text = highscore ? "New Highscore!" : endMessages[Random.Range(0, endMessages.Length)];
         score.text = time.ToString("0.0");
@@ -26,7 +27,6 @@ public class EndScreen : MonoBehaviour
         regularInterface.SetActive(!highscore);
         highscoreInterface.SetActive(highscore);
         if (highscore) Instantiate(effectPrefab);
-
         player.SetActive(false);
     }
 
@@ -34,9 +34,6 @@ public class EndScreen : MonoBehaviour
     public void Reload() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     public void Save()
     {
-        //return if player presses twice
-        if (PlayerPrefs.GetFloat("score") == scoreTime) return;
-
         string name = input.text.Replace(" ", "");
 
         //Check name
@@ -46,11 +43,12 @@ public class EndScreen : MonoBehaviour
             return;
         }
 
-        message.text = "score saved!";
-        input.text = "";
+        regularInterface.SetActive(true);
+        highscoreInterface.SetActive(false);
 
         //Save score
-        PlayerPrefs.SetFloat("score", scoreTime);
-        PlayerPrefs.SetString("score", name);
+        PlayerPrefs.SetFloat("scoreTime", scoreTime);
+        PlayerPrefs.SetString("scoreName", name);
+
     }
 }

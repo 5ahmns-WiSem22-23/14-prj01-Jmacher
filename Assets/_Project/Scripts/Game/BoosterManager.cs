@@ -5,20 +5,26 @@ using UnityEngine;
 
 public class BoosterManager : MonoBehaviour
 {
+    [SerializeField] private int max = 3;
     [SerializeField] private GameObject boosterPrefab;
     [SerializeField] private bool debugPoints;
 
     [HideInInspector] public List<GameObject> boosters = new();
     private List<Transform> spawnPoints = new();
+    [HideInInspector] public IEnumerator coroutine;
 
-    private void Start() => StartCoroutine(SpawnBooster());
+    public void Awake()
+    {
+        coroutine = SpawnBooster();
+        StartCoroutine(coroutine);
+    }
 
     private IEnumerator SpawnBooster()
     {
         spawnPoints = GetComponentsInChildren<Transform>().ToList();
         spawnPoints.Remove(transform);
 
-        while (boosters.Count < 3)
+        while (boosters.Count < max)
         {
             yield return new WaitForSeconds(Random.Range(2f, 5f));
 
