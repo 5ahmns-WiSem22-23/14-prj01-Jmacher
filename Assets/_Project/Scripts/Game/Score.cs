@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] private int winCount;
+    public int winCount = 4;
 
     [Header("References")]
     [SerializeField] private GameObject gameInterface, endInterface;

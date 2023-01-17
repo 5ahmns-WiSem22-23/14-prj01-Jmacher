@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,9 +15,15 @@ public class Start : MonoBehaviour
         tmp.text = "current highscore by " + name + ": " + time.ToString("0.0") + "s";
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.R) && Input.GetKey(KeyCode.LeftControl))
+        {
+            PlayerPrefs.SetFloat("scoreTime", 0);
+            tmp.text = "";
+        }
+    }
+
     public static void Play() => SceneManager.LoadScene(1);
     public static void Quit() => Application.Quit();
-
-    [MenuItem("Game/Reset Score")]
-    public static void ResetScore() => PlayerPrefs.SetFloat("scoreTime", 0);
 }

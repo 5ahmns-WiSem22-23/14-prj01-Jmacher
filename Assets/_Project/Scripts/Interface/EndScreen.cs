@@ -36,19 +36,17 @@ public class EndScreen : MonoBehaviour
     public void Reload() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     public void Save()
     {
-        string name = input.text.Replace(" ", "");
+        string name = input.text;
 
-        //Check name
         if (name.Length < 3)
         {
-            message.text = "The name must be at least 3 characters long and must not contain any spaces.";
+            message.text = "The name must be at least 2 characters long";
             return;
         }
 
         regularInterface.SetActive(true);
         highscoreInterface.SetActive(false);
 
-        //Save score
         PlayerPrefs.SetFloat("scoreTime", scoreTime);
         PlayerPrefs.SetString("scoreName", name);
 

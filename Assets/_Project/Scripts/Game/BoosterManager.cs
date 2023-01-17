@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BoosterManager : MonoBehaviour
 {
-    [SerializeField] private int max = 3;
+    public int max = 3;
     [SerializeField] private GameObject boosterPrefab;
     [SerializeField] private bool debugPoints;
 
