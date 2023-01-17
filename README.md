@@ -4,8 +4,8 @@ You're playing as the grinch who's mission it is to eliminate that exact joy.
 
 **Objectives**
 - Throw all the presents into the water
-- Use drugs to your advantage or avoid them to suite your playstyle
-- Compete for the least time used for a stealing session
+- Use speed to your advantage or avoid it depending on your playstyle
+- Compete for the shortest time until all presents are in the water
 
 ## Packages
 | Package Name | Package ID | Version |
